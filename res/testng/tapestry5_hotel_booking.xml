@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Tapestry5HotelBookingSuite" verbose="3">
+ 
+  <test name="Tapestry5HotelBooking">
+    <classes>
+      <class name="com.thangamfrm.tapestry5hotelbooking.test.TestAccountRegistration" />
+      <class name="com.thangamfrm.tapestry5hotelbooking.test.TestLogin" />
+    </classes>
+  </test>
+
+</suite>

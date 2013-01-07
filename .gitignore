@@ -1,0 +1,9 @@
+test-output/
+classes/
+screenshots/
+.settings
+.project
+.classpath
+remote-webdriver.log
+remote-webdriver.log.lck
+remote-webdriver-shutdown.log

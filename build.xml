@@ -1,0 +1,76 @@
+<project name="web-test-automation">
+
+    <property file="res/config/overrides.properties"/>
+    <property file="res/config/webtestautomation.properties"/>
+
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="classes.dir" value="${basedir}/classes"/>
+    <property name="resources.dir" value="${basedir}/res"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="testng.output.dir" value="${basedir}/testng-output"/>
+
+    <property name="remote.webdriver.log" value="remote-webdriver.log"/>
+    <property name="remote.webdriver.shutdown.log" value="remote-webdriver-shutdown.log"/>
+
+    <property name="test.suite" value="tapestry5_hotel_booking.xml"/>
+
+    <propertyset id="runtime-properties">
+        <propertyref name="aut.host"/>
+        <propertyref name="aut.port"/>
+        <propertyref name="build.number"/>
+        <propertyref name="webdriver.mode"/>
+        <propertyref name="remote.webdriver.host"/>
+        <propertyref name="remote.webdriver.port"/>
+    </propertyset>
+
+    <path id="classpath">
+        <pathelement location="${classes.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="start-remote-webdriver">
+        <echo message="Starting Remote WebDriver"/>
+        <java jar="${lib.dir}/selenium-server-standalone-2.28.0.jar" fork="true" spawn="true" classpathref="classpath">
+            <arg line="-log ${remote.webdriver.log} -browserSideLog -timeout 30"/>
+        </java>
+    </target>
+
+    <target name="stop-remote-webdriver">
+        <echo message="Stopping Remote WebDriver"/>
+        <get taskname="selenium-shutdown" src="http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer"
+                dest="${remote.webdriver.shutdown.log}" ignoreerrors="true" />
+    </target>
+
+    <taskdef name="testng" classpathref="classpath" classname="org.testng.TestNGAntTask"/>
+
+    <target name="clean">
+        <echo message="Cleaning Up..."/>
+        <delete dir="${testng.output.dir}" quiet="true" includeemptydirs="true"/>
+        <delete dir="${classes.dir}" quiet="true" includeemptydirs="true"/>
+        <delete dir="${screenshots.dir}" quiet="true" includeemptydirs="true"/>
+        <delete file="${remote.webdriver.log}" quiet="true"/>
+        <delete file="${remote.webdriver.shutdown.log}" quiet="true"/>
+        <echo message="Re-creating directories..."/>
+        <mkdir dir="${testng.output.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${screenshots.dir}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <echo message="Compiling..."/>
+        <javac debug="true" includeantruntime="false" debuglevel="vars,lines,source" srcdir="${src.dir}" destdir="${classes.dir}"
+               encoding="iso-8859-1" classpathref="classpath"/>
+    </target>
+
+    <target name="run-suite" depends="clean,compile">
+        <echo message="Running Test Suite"/>
+        <testng outputDir="${testng.output.dir}" classpathref="classpath" failureProperty="test.failure">
+            <propertyset refid="runtime-properties"/>
+            <xmlfileset dir="${resources.dir}/testng" includes="${test.suite}"/>
+        </testng>
+        <echo message="Test Suite Execution Completed! Results: ${testng.output.dir}"/>
+    </target>
+
+</project>
