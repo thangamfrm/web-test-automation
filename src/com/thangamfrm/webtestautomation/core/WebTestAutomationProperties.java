@@ -25,6 +25,9 @@ public class WebTestAutomationProperties {
     public static final String WEBDRIVER_MODE_PROPERTY = "webdriver.mode";
     public static final String REMOTE_WEBDRIVER_HOST_PROPERTY = "remote.webdriver.host";
     public static final String REMOTE_WEBDRIVER_PORT_PROPERTY = "remote.webdriver.port";
+    public static final String SAUCELABS_WEBDRIVER_USERNAME_PROPERTY = "saucelabs.webdriver.username";
+    public static final String SAUCELABS_WEBDRIVER_KEY_PROPERTY = "saucelabs.webdriver.key";
+
     public static final String SCREENSHOT_DIRECTORY_PROPERTY = "screenshots.dir";
 
     public static final String APPLICATION_UNDER_TEST_HOST_PROPERTY = "aut.host";

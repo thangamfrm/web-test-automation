@@ -7,3 +7,4 @@ screenshots/
 remote-webdriver.log
 remote-webdriver.log.lck
 remote-webdriver-shutdown.log
+res/config/overrides.properties

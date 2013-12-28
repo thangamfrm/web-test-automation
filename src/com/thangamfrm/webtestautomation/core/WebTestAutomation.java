@@ -29,6 +29,7 @@ public class WebTestAutomation {
 
     public static final String WEBDRIVER_MODE_LOCAL = "local";
     public static final String WEBDRIVER_MODE_REMOTE = "remote";
+    public static final String WEBDRIVER_MODE_SAUCE = "sauce";
     public static final int WAIT_FOR_DYNAMIC_CONTENT = 5; // seconds
 
     protected WebDriver driver;
@@ -48,6 +49,9 @@ public class WebTestAutomation {
             if (isRemoteWebDriver()) {
                 LOG.info("WebDriver Mode - Remote");
                 driver = new RemoteWebDriver(getRemoteWebDriverURL(), desiredCapabilities);
+            } else if (isSauceLabsWebDriver()) {
+                LOG.info("WebDriver Mode - Sauce");
+                driver = new RemoteWebDriver(getSauceLabsWebDriverURL(), desiredCapabilities);
             } else {
                  LOG.info("WebDriver Mode - Local");
                 driver = new FirefoxDriver(desiredCapabilities);
@@ -65,6 +69,11 @@ public class WebTestAutomation {
             Boolean.TRUE : Boolean.FALSE;
     }
 
+    protected boolean isSauceLabsWebDriver() {
+        return getProperty(WebTestAutomationProperties.WEBDRIVER_MODE_PROPERTY).equalsIgnoreCase(WEBDRIVER_MODE_SAUCE) ? 
+                Boolean.TRUE : Boolean.FALSE;
+    }
+
     protected URL getRemoteWebDriverURL() throws MalformedURLException {
         String host = getProperty(WebTestAutomationProperties.REMOTE_WEBDRIVER_HOST_PROPERTY);
         String port = getProperty(WebTestAutomationProperties.REMOTE_WEBDRIVER_PORT_PROPERTY);
@@ -74,6 +83,19 @@ public class WebTestAutomation {
                     host, port));
         }
         return new URL(String.format("http://%s:%s/wd/hub", host, port));
+    }
+
+    protected URL getSauceLabsWebDriverURL() throws MalformedURLException {
+        String host = getProperty(WebTestAutomationProperties.REMOTE_WEBDRIVER_HOST_PROPERTY);
+        String port = getProperty(WebTestAutomationProperties.REMOTE_WEBDRIVER_PORT_PROPERTY);
+        String userName = getProperty(WebTestAutomationProperties.SAUCELABS_WEBDRIVER_USERNAME_PROPERTY);
+        String key = getProperty(WebTestAutomationProperties.SAUCELABS_WEBDRIVER_KEY_PROPERTY);
+        LOG.info(String.format("SauceLabs WebDriver Host:Port - %s:%s , User: %s", host, port, userName));
+        if (StringUtils.isBlank(host)) {
+            throw new WebTestAutomationException(String.format("Invalid parameters! Sauce WebDriver host:port - %s:%s",
+                    host, port));
+        }
+        return new URL(String.format("http://%s:%s@%s:%s/wd/hub", userName, key, host, port));
     }
 
     public String getProperty(String property) {
