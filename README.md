@@ -16,3 +16,11 @@ Getting Started:
 - git clone https://github.com/thangamfrm/web-test-automation.git
 - cd web-test-automation
 - ant run-suite
+
+*) Features
+
+- Easy creation of Page Objects and author robust test cases
+- Support to run the tests in various modes (local - laptop, selenium grid and sauce labs).
+- Support to run the tests against various environments (Dev/QA/Staging/Beta/Prod)
+
+
